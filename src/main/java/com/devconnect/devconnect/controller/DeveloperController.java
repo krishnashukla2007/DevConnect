@@ -11,12 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devconnect.devconnect.model.Developer;
+
 
 
 
@@ -56,21 +58,44 @@ public class DeveloperController {
         return developersWithSkills;
     }
 
-    //@PostMapping
-    //public Developer addDeveloper(@RequestBody Developer developer) {
-    //    developer.setId(idCounter.getAndIncrement());
-    //    developers.put(developer.getId(), developer);
-    //    
-    //   return developer;
-    //}
+    /*
+    @PostMapping
+    public Developer addDeveloper(@RequestBody Developer developer) {
+        for(Developer dev: developers.values()) {
+            if(dev.getEmail().equals(developer.getEmail()) || dev.getPhone().equals(developer.getPhone())) {
+                return new Developer();
+            }
+        }
+        developer.setId(idCounter.getAndIncrement());
+        developers.put(developer.getId(), developer);
+        
+       return developer;
+    }
+    */
     
     //used when we want to put our own status code
     @PostMapping
     public ResponseEntity<Developer> createDeveloper(@RequestBody Developer developer) {
+    for(Developer dev: developers.values()) {
+            if(dev.getEmail().equals(developer.getEmail()) || dev.getPhone().equals(developer.getPhone())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+        }
         developer.setId(idCounter.getAndIncrement());
         developers.put(developer.getId(), developer);
         
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(developer);
     }
     
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Developer> replaceDeveloper(@PathVariable Long id, @RequestBody Developer developer) {
+        if(!developers.containsKey(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        developers.put(id, developer);
+
+        return ResponseEntity.status(HttpStatus.OK).body(developer);
+    }
 }
