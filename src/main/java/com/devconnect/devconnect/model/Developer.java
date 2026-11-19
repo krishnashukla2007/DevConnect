@@ -1,7 +1,8 @@
 package com.devconnect.devconnect.model;
 
-import java.util.*;
-import java.time.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Developer {
     private Long id;
@@ -15,9 +16,14 @@ public class Developer {
     private String gitHubURL;
     private List<String> skills;
     private String organization;
+    private Double yearsOfExperience;
     private final LocalDateTime createdAt;
 
-
+    public Developer() {
+        this.skills = new ArrayList<>();
+        this.createdAt = LocalDateTime.now();
+    }
+    
     public Developer(long id, String firstName, String lastName, String email) {
         this.id = id;
         this.firstName = firstName;
@@ -106,5 +112,12 @@ public class Developer {
     }
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public Double getYearsOfExperience() {
+        return yearsOfExperience;
+    }
+    public void setYearsOfExperience(Double yearsOfExperience) {
+        this.yearsOfExperience = yearsOfExperience;
     }
 }
